@@ -106,7 +106,38 @@
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Product Data</h6>
                         </div>
+
                         <div class="card-body">
+                            
+                            @if ($errors -> all())
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>Kesalahan!</strong> Pastikan anda mengisi form dengan benar!
+                            </div>
+                            @endif
+
+                            @if (session('messagehapus'))
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert1">
+                                {{session('messagehapus')}}
+                            </div>
+                            @endif
+
+                            @if (session('messagetambah'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert1">
+                                {{session('messagetambah')}}
+                            </div>
+                            @endif
+
+                            @if (session('messageedit'))
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert1">
+                                {{session('messageedit')}}
+                            </div>
+                            @endif
+                        
+                            <a href="#" data-toggle="modal" data-target="#tambahModal">
+                                <button type="submit" name="tambahdata" class="btn btn-success">
+                                    Add Product
+                                </button>
+                            </a><p></p>
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
@@ -117,6 +148,7 @@
                                             <th>Description</th>
                                             <th>Price</th>
                                             <th>Pict.</th>
+                                            <th>Option</th>
                                         </tr>
                                     </thead>            
                                     <tbody>
@@ -128,8 +160,95 @@
                                             <td>{{$s -> description}}</td>
                                             <td>{{$s -> price}}</td>
                                             <td>{{$s -> pict}}</td>
+                                            <td>
+                                                <center>
+                                                    <a href="#" data-toggle="modal" data-target="#editModal{{$s->product_id}}" class="btn btn-warning btn-circle btn-sm">
+                                                        <i class="fas fa-exclamation-triangle"></i>
+                                                    </a>
+
+                                                    <a href="#" data-toggle="modal" data-target="#hapusModal{{$s ->product_id}}" class="btn btn-danger btn-circle btn-sm">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                </center>
+                                            </td>
                                         </tr>
 
+                                        <!-- Edit Modal
+                                        <div class="modal fade" id="editModal{{$s->product_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Edit Data</h5>
+                                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form name="addproduct" id="addproduct" action="/admin/add " method="GET" enctype="multipart/form-data">
+                                                        @csrf
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label for="product_name" class="form-label">Product Name</label>
+                                                                    <input type="text" class="form-control @error('product_name') is-invalid @enderror" id="product_name" placeholder="Enter the Product Name" value=" {{ old('product_name', $s -> product_name)}}" >
+                                                                    @error('product_name')
+                                                                        <span class = "invalid-feedback">{{$message}}</span>
+                                                                    @enderror
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="category_id" class="form-label">Category ID</label>
+                                                                    <input type="text" class="form-control @error('category_id') is-invalid @enderror" id="category_id" placeholder="Enter the Category ID" value=" {{ old('category_id', $s -> category_id)}}" >
+                                                                    @error('category_id')
+                                                                        <span class = "invalid-feedback">{{$message}}</span>
+                                                                    @enderror
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="description" class="form-label">Description</label>
+                                                                    <textarea class="form-control @error('description') is-invalid @enderror" id="description" rows="3">{{ old('description', $s -> description)}}</textarea>
+                                                                    @error('description')
+                                                                        <span class = "invalid-feedback">{{$message}}</span>
+                                                                    @enderror
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="price" class="form-label">Price</label>
+                                                                    <input type="text" class="form-control @error('price') is-invalid @enderror" id="price" placeholder="Enter the Product Price" value=" {{ old('price', $s -> price)}}" >
+                                                                    @error('price')
+                                                                        <span class = "invalid-feedback">{{$message}}</span>
+                                                                    @enderror
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                                                <a class="btn btn-danger" href="/admin/add">Add Product</a>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> -->
+
+                                        <!-- Hapus Modal-->
+                                        <div class="modal fade" id="hapusModal{{$s->product_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Apakah ingin menghapus data?</h5>
+                                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">Ketuk "Hapus" untuk menghapus data.</div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                                        <a class="btn btn-danger" href="admin/delete/{{$s ->product_id}}">Hapus</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -139,6 +258,69 @@
 
                 </div>
                 <!-- /.container-fluid -->
+
+            <!-- Tambah Modal-->
+            <div class="modal fade" id="tambahModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add Product</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <form name="addproduct" id="addproduct" action="/admin/add" method="GET" enctype="multipart/form-data">
+                        @csrf
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="add_product_name" class="form-label">Product Name</label>
+                                    <input type="text" class="form-control @error('add_product_name') is-invalid @enderror" id="add_product_name" placeholder="Enter the Product Name" value=" {{ old('add_product_name')}}" >
+                                    @error('add_product_name')
+                                        <span class = "invalid-feedback">{{$message}}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="add_category_id" class="form-label">Category ID</label>
+                                    <input type="text" class="form-control @error('add_category_id') is-invalid @enderror" id="add_category_id" placeholder="Enter the Category ID" value=" {{ old('add_category_id')}}" >
+                                    @error('add_category_id')
+                                        <span class = "invalid-feedback">{{$message}}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="add_description" class="form-label">Description</label>
+                                    <textarea class="form-control @error('add_description') is-invalid @enderror" id="add_description" rows="3" value=" {{ old('add_description')}}" ></textarea>
+                                    @error('add_description')
+                                        <span class = "invalid-feedback">{{$message}}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="add_price" class="form-label">Price</label>
+                                    <input type="text" class="form-control @error('add_price') is-invalid @enderror" id="add_price" placeholder="Enter the Product Price" value=" {{old('add_price')}}" >
+                                    @error('add_price')
+                                        <span class = "invalid-feedback">{{$message}}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="add_pict" class="form-label">Pict</label>
+                                    <input type="file" class="form-control @error('add_pict') is-invalid @enderror" id="add_pict" value=" {{old('add_pict')}}" >
+                                    @error('add_pict')
+                                        <span class = "invalid-feedback">{{$message}}</span>
+                                    @enderror
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                <button type="submit" name="produktambah" class="btn btn-success">Add Product</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
             </div>
             <!-- End of Main Content -->
@@ -163,26 +345,6 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="{{asset('vendor/jquery/jquery.min.js')}}"></script>

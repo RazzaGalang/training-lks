@@ -23,9 +23,9 @@ class Level
         }
         
         if (Auth::user()->level == "admin") {
-            return Redirect::to('admin');
+            return Redirect::to('/admin');
         } elseif (Auth::user()->level == "costumer") {
-            return Redirect::to('dashboard');
+            return Redirect::to('/dashboard');
         }
     }
 }
